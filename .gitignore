@@ -30,6 +30,8 @@
 *.exe
 *.out
 *.app
+
+# our binaries
 cpptest
 cpptest-glibc
 ctest
