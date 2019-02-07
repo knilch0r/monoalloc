@@ -24,3 +24,5 @@ aligned pointers.
 - to see debug output, define `DEBUG` - see `Makefile`. this will print tracing information
   for every `\*alloc` call except the ones that are happening inside the tracing `printf`s.
 - see source for details.
+# recommended reading
+the competition: https://sourceware.org/git/?p=glibc.git;a=blob;f=malloc/malloc.c;hb=HEAD
