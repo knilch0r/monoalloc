@@ -17,6 +17,8 @@ aligned pointers.
   - link your applications against `libmonoalloc.so`, see `Makefile` or
   - use `LD_PRELOAD=libmonoalloc.so` for an existing application that has `malloc` linked
     in dynamically.
+- alternatively, just statically compile and link `monoalloc.c` to your code before linking
+  in the C library.
 - set `monoalloc_size` to the maximum size you want to allocate - either by changing the code, or
   by setting it at runtime *before your first call to malloc, which might be in some C/C++
   library function*.
