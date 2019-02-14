@@ -10,6 +10,9 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  */
+#ifdef __cplusplus
+extern "C" {
+#endif
 #include <stddef.h>
 #include <stdint.h>
 #include <string.h>
@@ -90,4 +93,8 @@ void *realloc(void *ptr, size_t size) {
 	memcpy(tmp, ptr, size);
 	return tmp;
 }
+
+#ifdef __cplusplus
+} /* extern "C" */
+#endif
 
