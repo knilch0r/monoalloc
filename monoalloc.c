@@ -62,9 +62,12 @@ void *malloc(size_t size) {
 	currsize += size;
 #ifdef DEBUG
 	if (!indebug) {
+		void * ntmp = next;
 		/* printf() would call malloc(), resulting in endless recursion... */
 		indebug = 1;
-		printf("trace: malloc'd %zd bytes, next %p, return %p\n", size, next, tmp);
+		MUTEX_UNLOCK();
+		printf("trace: malloc'd %zd bytes, next %p, return %p\n", size, ntmp, tmp);
+		MUTEX_LOCK();
 		indebug = 0;
 	}
 #endif
