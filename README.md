@@ -9,7 +9,7 @@ On the other hand, you'll probably notice that `free()` is a no-op, and `realloc
 will get you a new chunk, so applications using these two often might need more memory than
 when using other allocators.
 # caveats
-not thread-safe. probably broken. for educational purposes only. NO WARRANTY. 'AS-IS'.
+probably not thread-safe. probably broken. for educational purposes only. NO WARRANTY. 'AS-IS'.
 assumes 16 bytes alignment will be enough for anybody, and that `sbrk()` only returns
 aligned pointers.
 # how to use
@@ -25,6 +25,8 @@ aligned pointers.
 - have fun.
 - to see debug output, define `DEBUG` - see `Makefile`. this will print tracing information
   for every `*alloc` call except the ones that are happening inside the tracing `printf`s.
+- to make thread-safe in a pthread-based thread implementation, define `THREADS` and link against
+  libpthread; code will then use a pthread mutex to ensure consistency of global data.
 - see source for details.
 # recommended reading
 the competition: https://sourceware.org/git/?p=glibc.git;a=blob;f=malloc/malloc.c;hb=HEAD
