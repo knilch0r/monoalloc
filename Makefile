@@ -1,6 +1,6 @@
 .PHONY: all test clean
 
-all: cpptest ctest libmonoalloc.so
+all: cpptest ctest libmonoalloc.so threadtest
 
 ifneq ($(D),)
 EXTRAFLAGS:=-DDEBUG -g
@@ -17,11 +17,16 @@ ctest: test.c libmonoalloc.so
 	gcc -Wall $(EXTRAFLAGS) $^ -o $@
 	gcc -Wall $(EXTRAFLAGS) $< -o $@-glibc
 
-test: ctest cpptest
+threadtest: threadtest.cpp monoalloc.c
+	g++ -Wall -DTHREADS $(EXTRAFLAGS) $^ -lpthread -o $@
+
+
+test: ctest cpptest threadtest
 	LD_LIBRARY_PATH=. ./ctest -------------------------------
 	./ctest-glibc -------------------------------------------
 	LD_LIBRARY_PATH=. ./cpptest -----------------------------
 	./cpptest-glibc -----------------------------------------
+	./threadtest > threadtest.out
 
 clean:
-	rm -f cpptest ctest libmonoalloc.so cpptest-glibc ctest-glibc
+	rm -f cpptest ctest libmonoalloc.so cpptest-glibc ctest-glibc threadtest threadtest.out
