@@ -27,4 +27,5 @@ aligned pointers.
   for every `*alloc` call except the ones that are happening inside the tracing `printf`s.
 - see source for details.
 # recommended reading
-the competition: https://sourceware.org/git/?p=glibc.git;a=blob;f=malloc/malloc.c;hb=HEAD
+- https://www.gnu.org/software/libc/manual/html_node/Replacing-malloc.html
+- https://sourceware.org/git/?p=glibc.git;a=blob;f=malloc/malloc.c;hb=HEAD
