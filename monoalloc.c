@@ -20,6 +20,22 @@ extern "C" {
 #ifdef DEBUG
 #include <stdio.h>
 static int indebug;
+static unsigned long long counter;
+#include <sys/syscall.h>
+#ifdef SYS_gettid
+static inline pid_t gettid(void) { return syscall(SYS_gettid); }
+#else
+#error "SYS_gettid unavailable on this system"
+#endif
+#endif
+#ifdef THREADS
+#include <pthread.h>
+static pthread_mutex_t monoalloc_mutex = PTHREAD_MUTEX_INITIALIZER;
+#define MUTEX_LOCK()  do { pthread_mutex_lock(&monoalloc_mutex); } while (0)
+#define MUTEX_UNLOCK()  do { pthread_mutex_unlock(&monoalloc_mutex); } while (0)
+#else
+#define MUTEX_LOCK()  do { /* nothing */ } while (0)
+#define MUTEX_UNLOCK()  do { /* nothing */ } while (0)
 #endif
 /* size of initial allocation */
 size_t monoalloc_size = 50 * 1042 * 1024;
@@ -37,34 +53,41 @@ static void check_init(void) {
 }
 
 void *malloc(size_t size) {
-	void * tmp;
+	void * tmp = NULL;
+	MUTEX_LOCK();
 	/* we assume that next always points to sufficiently aligned memory,
 	 * so further alignment is ensured by increasing size */
 	if (size & 0xFu) size = (size + 16) & (~ (size_t) 0xFu);
 	if ((SIZE_MAX - size < currsize) || (monoalloc_size < currsize + size)) {
 		/* FIXME: errno = ENOMEM; */
-		return NULL;
+		goto out_unlock;
 	}
 	check_init();
-	if (!next) return NULL;
+	if (!next) goto out_unlock;
 	tmp = next;
 	next = (char *)next + size;
 	currsize += size;
 #ifdef DEBUG
+	counter++;
 	if (!indebug) {
+		void * ntmp = next;
 		/* printf() would call malloc(), resulting in endless recursion... */
 		indebug = 1;
-		printf("trace: malloc'd %zd bytes, next %p, return %p\n", size, next, tmp);
+		MUTEX_UNLOCK();
+		printf("trace %llu: malloc'd %zd bytes, next %p, return %p (%llu)\n", (unsigned long long) gettid(), size, ntmp, tmp, counter);
+		MUTEX_LOCK();
 		indebug = 0;
 	}
 #endif
+out_unlock:
+	MUTEX_UNLOCK();
 	return tmp;
 }
 
 void free(void *ptr) {
 	/* do nothing */
 #ifdef DEBUG
-	printf("trace: free %p\n", ptr);
+	printf("trace %llu: free %p\n", (unsigned long long) gettid(), ptr);
 #endif
 	(void) ptr;
 }
@@ -72,7 +95,7 @@ void free(void *ptr) {
 void *calloc(size_t nmemb, size_t size) {
 	void *tmp;
 #ifdef DEBUG
-	printf("trace: calloc %zd, %zd\n", nmemb, size);
+	printf("trace %llu: calloc %zd, %zd\n", (unsigned long long) gettid(), nmemb, size);
 #endif
 	/* ensure proper alignment for array members */
 	if (size & 0xFu) size = (size + 16) & (~ (size_t) 0xFu);
@@ -85,7 +108,7 @@ void *calloc(size_t nmemb, size_t size) {
 void *realloc(void *ptr, size_t size) {
 	void *tmp;
 #ifdef DEBUG
-	printf("trace: realloc %p, %zd\n", ptr, size);
+	printf("trace %llu: realloc %p, %zd\n", (unsigned long long) gettid(), ptr, size);
 #endif
 	if (!ptr) return malloc(size);
 	if (!size) return NULL;
