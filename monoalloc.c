@@ -20,6 +20,7 @@ extern "C" {
 #ifdef DEBUG
 #include <stdio.h>
 static int indebug;
+static unsigned long long counter;
 #endif
 #ifdef THREADS
 #include <pthread.h>
@@ -61,12 +62,13 @@ void *malloc(size_t size) {
 	next = (char *)next + size;
 	currsize += size;
 #ifdef DEBUG
+	counter++;
 	if (!indebug) {
 		void * ntmp = next;
 		/* printf() would call malloc(), resulting in endless recursion... */
 		indebug = 1;
 		MUTEX_UNLOCK();
-		printf("trace: malloc'd %zd bytes, next %p, return %p\n", size, ntmp, tmp);
+		printf("trace: malloc'd %zd bytes, next %p, return %p (%llu)\n", size, ntmp, tmp, counter);
 		MUTEX_LOCK();
 		indebug = 0;
 	}
