@@ -21,6 +21,15 @@ extern "C" {
 #include <stdio.h>
 static int indebug;
 #endif
+#ifdef THREADS
+#include <pthread.h>
+static pthread_mutex_t monoalloc_mutex = PTHREAD_MUTEX_INITIALIZER;
+#define MUTEX_LOCK()  do { pthread_mutex_lock(&monoalloc_mutex); } while (0)
+#define MUTEX_UNLOCK()  do { pthread_mutex_unlock(&monoalloc_mutex); } while (0)
+#else
+#define MUTEX_LOCK()  do { /* nothing */ } while (0)
+#define MUTEX_UNLOCK()  do { /* nothing */ } while (0)
+#endif
 /* size of initial allocation */
 size_t monoalloc_size = 50 * 1042 * 1024;
 static int init;
@@ -37,16 +46,17 @@ static void check_init(void) {
 }
 
 void *malloc(size_t size) {
-	void * tmp;
+	void * tmp = NULL;
+	MUTEX_LOCK();
 	/* we assume that next always points to sufficiently aligned memory,
 	 * so further alignment is ensured by increasing size */
 	if (size & 0xFu) size = (size + 16) & (~ (size_t) 0xFu);
 	if ((SIZE_MAX - size < currsize) || (monoalloc_size < currsize + size)) {
 		/* FIXME: errno = ENOMEM; */
-		return NULL;
+		goto out_unlock;
 	}
 	check_init();
-	if (!next) return NULL;
+	if (!next) goto out_unlock;
 	tmp = next;
 	next = (char *)next + size;
 	currsize += size;
@@ -58,6 +68,8 @@ void *malloc(size_t size) {
 		indebug = 0;
 	}
 #endif
+out_unlock:
+	MUTEX_UNLOCK();
 	return tmp;
 }
 
