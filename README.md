@@ -1,4 +1,6 @@
 # monoalloc
+![](https://github.com/knilch0r/monoalloc/workflows/C/C++%20CI/badge.svg)
+
 monotonic allocator replacement for `malloc()`.
 
 "monotonic allocator" means that this is the most space-conserving, real-time malloc you'll
