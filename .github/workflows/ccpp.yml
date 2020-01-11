@@ -13,3 +13,13 @@ jobs:
       run: make D=1
     - name: make test
       run: make test
+    - name: prepare upload
+      run: |
+        ls -l > filesizes.out
+        mkdir out
+        mv *.so *.out out/
+    - name: upload
+      uses: actions/upload-artifact@v1
+      with:
+        name: artifacts
+        path: out
