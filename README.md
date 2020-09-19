@@ -1,5 +1,6 @@
 # monoalloc
 ![](https://github.com/knilch0r/monoalloc/workflows/C/C++%20CI/badge.svg)
+![CodeQL](https://github.com/knilch0r/monoalloc/workflows/CodeQL/badge.svg)
 
 monotonic allocator replacement for `malloc()`.
 
