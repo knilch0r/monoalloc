@@ -37,7 +37,7 @@ jobs:
         languages: ${{ matrix.language }}
 
     - run: |
-       make bootstrap
+       make
        make test
 
     - name: Perform CodeQL Analysis
