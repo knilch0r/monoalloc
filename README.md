@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2019 knilch <knilch0r@cwde.de>
+
+SPDX-License-Identifier: GPL-2.0-only
+-->
+
 # monoalloc
 ![](https://github.com/knilch0r/monoalloc/workflows/C/C++%20CI/badge.svg)
 ![CodeQL](https://github.com/knilch0r/monoalloc/workflows/CodeQL/badge.svg)

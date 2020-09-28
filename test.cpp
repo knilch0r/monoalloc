@@ -1,3 +1,7 @@
+// SPDX-FileCopyrightText: 2019 knilch <knilch0r@cwde.de>
+//
+// SPDX-License-Identifier: GPL-2.0-only
+
 // constructing vectors
 #include <iostream>
 #include <vector>
