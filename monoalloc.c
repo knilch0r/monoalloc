@@ -107,7 +107,7 @@ void *realloc(void *ptr, size_t size) {
 	if (!ptr) return malloc(size);
 	if (!size) return NULL;
 	tmp = malloc(size);
-	memcpy(tmp, ptr, size);
+	memmove(tmp, ptr, size);
 	return tmp;
 }
 
