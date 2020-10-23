@@ -95,7 +95,7 @@ void *calloc(size_t nmemb, size_t size) {
 	if (size & 0xFu) size = (size + 16) & (~ (size_t) 0xFu);
 	tmp = malloc(nmemb*size);
 	if (!tmp) return NULL;
-	memset(tmp, 0, size);
+	memset(tmp, 0, nmemb*size);
 	return tmp;
 }
 
