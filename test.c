@@ -19,6 +19,8 @@ int main(int argc, char**argv) {
 	free(b);
 	puts("free(b)");
 	b = mallocprint(512);
+	b = realloc(b, 1024);
+	printf("realloc(1024) = %p\n", b);
 	free(c);
 	puts("free(c)");
 	b = mallocprint(argc * 1024 * 1024);
