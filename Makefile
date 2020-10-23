@@ -11,18 +11,18 @@ EXTRAFLAGS:=-DDEBUG -g
 endif
 
 libmonoalloc.so: monoalloc.c
-	gcc -Wall -Wextra -fPIC $(EXTRAFLAGS) $^ -shared -o $@ -lc
+	gcc -Wall -Wextra -fPIC $(CFLAGS) $(EXTRAFLAGS) $^ -shared -o $@ -lc
 
 cpptest: test.cpp libmonoalloc.so
-	g++ -Wall $(EXTRAFLAGS) $^ -o $@
-	g++ -Wall $(EXTRAFLAGS) $< -o $@-glibc
+	g++ -Wall $(CFLAGS) $(EXTRAFLAGS) $^ -o $@
+	g++ -Wall $(CFLAGS) $(EXTRAFLAGS) $< -o $@-glibc
 
 ctest: test.c libmonoalloc.so
-	gcc -Wall $(EXTRAFLAGS) $^ -o $@
-	gcc -Wall $(EXTRAFLAGS) $< -o $@-glibc
+	gcc -Wall $(CFLAGS) $(EXTRAFLAGS) $^ -o $@
+	gcc -Wall $(CFLAGS) $(EXTRAFLAGS) $< -o $@-glibc
 
 threadtest: threadtest.cpp monoalloc.c
-	g++ -Wall -DTHREADS $(EXTRAFLAGS) $^ -lpthread -o $@
+	g++ -Wall -DTHREADS $(CFLAGS) $(EXTRAFLAGS) $^ -lpthread -o $@
 
 
 test: ctest cpptest threadtest
