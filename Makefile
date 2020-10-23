@@ -14,15 +14,15 @@ libmonoalloc.so: monoalloc.c
 	gcc -Wall -Wextra -fPIC $(CFLAGS) $(EXTRAFLAGS) $^ -shared -o $@ -lc
 
 cpptest: test.cpp libmonoalloc.so
-	g++ -Wall $(CFLAGS) $(EXTRAFLAGS) $^ -o $@
-	g++ -Wall $(CFLAGS) $(EXTRAFLAGS) $< -o $@-glibc
+	g++ -Wall $(EXTRAFLAGS) $^ -o $@
+	g++ -Wall $(EXTRAFLAGS) $< -o $@-glibc
 
 ctest: test.c libmonoalloc.so
 	gcc -Wall $(CFLAGS) $(EXTRAFLAGS) $^ -o $@
 	gcc -Wall $(CFLAGS) $(EXTRAFLAGS) $< -o $@-glibc
 
 threadtest: threadtest.cpp monoalloc.c
-	g++ -Wall -DTHREADS $(CFLAGS) $(EXTRAFLAGS) $^ -lpthread -o $@
+	g++ -Wall -DTHREADS $(EXTRAFLAGS) $^ -lpthread -o $@
 
 
 test: ctest cpptest threadtest
