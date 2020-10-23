@@ -26,11 +26,11 @@ threadtest: threadtest.cpp monoalloc.c
 
 
 test: ctest cpptest threadtest
-	LD_LIBRARY_PATH=. ./ctest -------------------------------
-	./ctest-glibc -------------------------------------------
+	./threadtest > threadtest.out
 	LD_LIBRARY_PATH=. ./cpptest -----------------------------
 	./cpptest-glibc -----------------------------------------
-	./threadtest > threadtest.out
+	LD_LIBRARY_PATH=. ./ctest -------------------------------
+	./ctest-glibc -------------------------------------------
 
 clean:
 	rm -f cpptest ctest libmonoalloc.so cpptest-glibc ctest-glibc threadtest threadtest.out
