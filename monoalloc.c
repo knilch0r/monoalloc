@@ -17,7 +17,7 @@ static int indebug;
 static unsigned long long counter;
 #include <sys/syscall.h>
 #ifdef SYS_gettid
-static inline pid_t gettid(void) { return syscall(SYS_gettid); }
+static inline pid_t mygettid(void) { return syscall(SYS_gettid); }
 #else
 #error "SYS_gettid unavailable on this system"
 #endif
@@ -68,7 +68,7 @@ void *malloc(size_t size) {
 		/* printf() would call malloc(), resulting in endless recursion... */
 		indebug = 1;
 		MUTEX_UNLOCK();
-		printf("trace %llu: malloc'd %zd bytes, next %p, return %p (%llu)\n", (unsigned long long) gettid(), size, ntmp, tmp, counter);
+		printf("trace %llu: malloc'd %zd bytes, next %p, return %p (%llu)\n", (unsigned long long) mygettid(), size, ntmp, tmp, counter);
 		MUTEX_LOCK();
 		indebug = 0;
 	}
@@ -81,7 +81,7 @@ out_unlock:
 void free(void *ptr) {
 	/* do nothing */
 #ifdef DEBUG
-	printf("trace %llu: free %p\n", (unsigned long long) gettid(), ptr);
+	printf("trace %llu: free %p\n", (unsigned long long) mygettid(), ptr);
 #endif
 	(void) ptr;
 }
@@ -89,7 +89,7 @@ void free(void *ptr) {
 void *calloc(size_t nmemb, size_t size) {
 	void *tmp;
 #ifdef DEBUG
-	printf("trace %llu: calloc %zd, %zd\n", (unsigned long long) gettid(), nmemb, size);
+	printf("trace %llu: calloc %zd, %zd\n", (unsigned long long) mygettid(), nmemb, size);
 #endif
 	/* ensure proper alignment for array members */
 	if (size & 0xFu) size = (size + 16) & (~ (size_t) 0xFu);
@@ -102,7 +102,7 @@ void *calloc(size_t nmemb, size_t size) {
 void *realloc(void *ptr, size_t size) {
 	void *tmp;
 #ifdef DEBUG
-	printf("trace %llu: realloc %p, %zd\n", (unsigned long long) gettid(), ptr, size);
+	printf("trace %llu: realloc %p, %zd\n", (unsigned long long) mygettid(), ptr, size);
 #endif
 	if (!ptr) return malloc(size);
 	if (!size) return NULL;
