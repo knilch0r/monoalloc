@@ -8,6 +8,8 @@ SPDX-License-Identifier: GPL-2.0-only
 ![](https://github.com/knilch0r/monoalloc/workflows/C/C++%20CI/badge.svg)
 ![CodeQL](https://github.com/knilch0r/monoalloc/workflows/CodeQL/badge.svg)
 ![REUSE Compliance Check](https://github.com/knilch0r/monoalloc/workflows/REUSE%20Compliance%20Check/badge.svg)
+[![Scc Count Badge](https://sloc.xyz/github/knilch0r/monoalloc)](https://github.com/boyter/scc/)
+[![Scc COCOMO Badge](https://sloc.xyz/github/knilch0r/monoalloc?category=cocomo)](https://github.com/boyter/scc/)
 
 monotonic allocator replacement for `malloc()`.
 
