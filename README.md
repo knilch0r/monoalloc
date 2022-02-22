@@ -34,7 +34,7 @@ aligned pointers.
 - set `monoalloc_size` to the maximum size you want to allocate - either by changing the code, or
   by setting it at runtime *before your first call to malloc, which might be in some C/C++
   library function*.
-- have fun.
+- have fun!
 - to see debug output, define `DEBUG` - see `Makefile`. this will print tracing information
   for every `*alloc` call except the ones that are happening inside the tracing `printf`s.
 - to make thread-safe in a pthread-based thread implementation, define `THREADS` and link against
